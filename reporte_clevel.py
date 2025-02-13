@@ -102,7 +102,6 @@ def process_file(uploaded_file):
                                    'Media de Puntualidad',
                                    'Promedio General',
                                    'Número de Participantes']
-    df_desempeno_grupos = df_desempeno_grupos.round(1)
 
     # Lista de columnas que contienen las medias
     columnas_media = [
@@ -112,11 +111,12 @@ def process_file(uploaded_file):
         'Media de Puntualidad',
         'Promedio General'
     ]
-
     # Aplicar la ponderación: dividir entre 4 y multiplicar por 5
-    df_desempeno_grupos[columnas_media] = df_desempeno_grupos[columnas_media] * (5/4)
+    df_desempeno_grupos[columnas_media] = (df_desempeno_grupos[columnas_media]/4)*5
 
-    
+    df_desempeno_grupos = df_desempeno_grupos.round(1)
+
+
     # 8. Evaluación de respuestas individuales
     df_respuestas_individuales = pd.concat([df_categoricas, columnas_a_usar], axis=1)
     df_agrupado = df_respuestas_individuales.groupby(['nombre_micro', 'FORMADOR', 'Grupo', 'GP']).agg(
