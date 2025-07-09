@@ -42,7 +42,7 @@ def process_file(uploaded_file):
         "4. Totalmente de Acuerdo": 4
     }
     # Seleccionamos las columnas de las respuestas (suponiendo que son las columnas 20 a 35)
-    columnas_a_usar = df.iloc[:, 19:35]
+    columnas_a_usar = df.iloc[:, 21:37]
     columnas_a_usar = columnas_a_usar.replace(mapa_respuestas).astype(float)
     
     # 4. Definir las categorías y la cantidad de preguntas por cada una
