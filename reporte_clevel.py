@@ -6,43 +6,34 @@ import io
 def process_file(uploaded_file):
     # Leer el archivo Excel desde el objeto subido, utilizando la hoja 'BASE'
     df = pd.read_excel(uploaded_file, sheet_name='BASE')
-    
-    # 1. Procesar la columna de microcertificación
-    df['Microcertificación que se encuentra terminando al momento de diligenciar este formulario'] = df.apply(
-        lambda row: row['Microcertificación que se encuentra terminando al momento de diligenciar este formulario']
-                    if pd.notna(row['Microcertificación que se encuentra terminando al momento de diligenciar este formulario'])
-                    else (
-                        row['Microcertificación que se encuentra terminando al momento de diligenciar este formulario2']
-                        if pd.notna(row['Microcertificación que se encuentra terminando al momento de diligenciar este formulario2'])
-                        else (
-                            row['Microcertificación que se encuentra terminando al momento de diligenciar este formulario3']
-                            if pd.notna(row['Microcertificación que se encuentra terminando al momento de diligenciar este formulario3'])
-                            else row['Microcertificación que se encuentra terminando al momento de diligenciar este formulario4']
-                        )
-                    ),
-        axis=1
+
+    df.rename(
+    columns={ df.columns[19]: 
+        "Microcertificación que se encuentra terminando al momento de diligenciar este formulario5"
+    },
+    inplace=True
     )
-    # Renombrar la columna a 'nombre_micro'
-    df.rename(columns={'Microcertificación que se encuentra terminando al momento de diligenciar este formulario': 'nombre_micro'}, inplace=True)
     
-    # 2. Procesar la columna del formador
-    df['Formador con el que tomó la microcertificación'] = df.apply(
-        lambda row: row['Formador con el que tomó la microcertificación']
-                    if pd.notna(row['Formador con el que tomó la microcertificación'])
-                    else (
-                        row['Formador con el que tomó la microcertificación2']
-                        if pd.notna(row['Formador con el que tomó la microcertificación2'])
-                        else (
-                            row['Formador con el que tomó la microcertificación3']
-                            if pd.notna(row['Formador con el que tomó la microcertificación3'])
-                            else row['Formador con el que tomó la microcertificación4']
-                        )
-                    ),
-        axis=1
-    )
-    # Renombrar a 'nombre_docente'
-    df.rename(columns={'Formador con el que tomó la microcertificación': 'nombre_docente'}, inplace=True)
-    
+    # 1. Nombre de la microcertificación    
+    cols_micro = [
+        'Microcertificación que se encuentra terminando al momento de diligenciar este formulario',
+        'Microcertificación que se encuentra terminando al momento de diligenciar este formulario2',
+        'Microcertificación que se encuentra terminando al momento de diligenciar este formulario3',
+        'Microcertificación que se encuentra terminando al momento de diligenciar este formulario4',
+        'Microcertificación que se encuentra terminando al momento de diligenciar este formulario5'
+    ]
+    df['nombre_micro'] = df[cols_micro].bfill(axis=1).iloc[:, 0]
+
+    # 2. Formador de la microcertificación
+    cols_formador = [
+        'Formador con el que tomó la microcertificación',
+        'Formador con el que tomó la microcertificación2',
+        'Formador con el que tomó la microcertificación3',
+        'Formador con el que tomó la microcertificación4',
+        'Formador con el que tomó la microcertificación5'
+    ]
+    df['formador_micro'] = df[cols_formador].bfill(axis=1).iloc[:, 0]
+
     # 3. Mapear respuestas textuales a valores numéricos
     mapa_respuestas = {
         "1. En Total Desacuerdo": 1,
