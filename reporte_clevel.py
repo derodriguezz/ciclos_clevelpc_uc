@@ -72,7 +72,7 @@ def process_file(uploaded_file):
     
     # 6. Extraer columnas categóricas y crear reporte de docentes
     df_categoricas = df[['nombre_micro', 'FORMADOR', 'Grupo', 'GP']]
-    df_docentes = columnas_a_usar.iloc[:, [5, 6, 7, 8]]
+    df_docentes = columnas_a_usar.iloc[:, [6, 7, 8, 9]]
     df_resultado_docentes = pd.concat([df_categoricas, df_docentes], axis=1)
     df_resultado_docentes['Promedio'] = df_docentes.mean(axis=1)
     
