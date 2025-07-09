@@ -159,7 +159,7 @@ def process_file(uploaded_file):
     
 
     # 10.1 Combinar el DataFrame de comentarios (por ejemplo, df_categoricas) con la columna específica de df
-    columnas_comentarios = pd.concat([df_categoricas, df.iloc[:, 35]], axis=1)
+    columnas_comentarios = pd.concat([df_categoricas, df.iloc[:, 37]], axis=1)
 
     # 10.2. Agrupar y concatenar los comentarios en una sola columna por grupo
     df_comentarios = columnas_comentarios.groupby(['nombre_micro', 'FORMADOR', 'Grupo']).agg(
