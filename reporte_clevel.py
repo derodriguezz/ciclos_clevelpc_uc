@@ -7,12 +7,21 @@ def process_file(uploaded_file):
     # Leer el archivo Excel desde el objeto subido, utilizando la hoja 'BASE'
     df = pd.read_excel(uploaded_file, sheet_name='BASE')
 
-    df.rename(
-    columns={ df.columns[19]: 
-        "Microcertificación que se encuentra terminando al momento de diligenciar este formulario5"
-    },
-    inplace=True
-    )
+    
+    # Definir los índices de columnas y sus nuevos nombres
+    mapeo = {
+        19: "Microcertificación que se encuentra terminando al momento de diligenciar este formulario5",
+        21: "Microcertificación que se encuentra terminando al momento de diligenciar este formulario6",
+        23: "Microcertificación que se encuentra terminando al momento de diligenciar este formulario7",
+        25: "Microcertificación que se encuentra terminando al momento de diligenciar este formulario8"
+    }
+
+    # Construir el diccionario usando df.columns[indice]
+    renombres = {df.columns[i]: nuevo for i, nuevo in mapeo.items()}
+
+    # Aplicar el renombrado
+    df.rename(columns=renombres, inplace=True)
+
     
     # 1. Nombre de la microcertificación    
     cols_micro = [
@@ -20,7 +29,10 @@ def process_file(uploaded_file):
         'Microcertificación que se encuentra terminando al momento de diligenciar este formulario2',
         'Microcertificación que se encuentra terminando al momento de diligenciar este formulario3',
         'Microcertificación que se encuentra terminando al momento de diligenciar este formulario4',
-        'Microcertificación que se encuentra terminando al momento de diligenciar este formulario5'
+        'Microcertificación que se encuentra terminando al momento de diligenciar este formulario5',
+        'Microcertificación que se encuentra terminando al momento de diligenciar este formulario6',
+        'Microcertificación que se encuentra terminando al momento de diligenciar este formulario7',
+        'Microcertificación que se encuentra terminando al momento de diligenciar este formulario8'
     ]
     df['nombre_micro'] = df[cols_micro].bfill(axis=1).iloc[:, 0]
 
@@ -30,7 +42,10 @@ def process_file(uploaded_file):
         'Formador con el que tomó la microcertificación2',
         'Formador con el que tomó la microcertificación3',
         'Formador con el que tomó la microcertificación4',
-        'Formador con el que tomó la microcertificación5'
+        'Formador con el que tomó la microcertificación5',
+        'Formador con el que tomó la microcertificación6',
+        'Formador con el que tomó la microcertificación7',
+        'Formador con el que tomó la microcertificación8'
     ]
     df['formador_micro'] = df[cols_formador].bfill(axis=1).iloc[:, 0]
 
@@ -42,7 +57,7 @@ def process_file(uploaded_file):
         "4. Totalmente de Acuerdo": 4
     }
     # Seleccionamos las columnas de las respuestas (suponiendo que son las columnas 20 a 35)
-    columnas_a_usar = df.iloc[:, 21:37]
+    columnas_a_usar = df.iloc[:, 27:43]
     columnas_a_usar = columnas_a_usar.replace(mapa_respuestas).astype(float)
     
     # 4. Definir las categorías y la cantidad de preguntas por cada una
@@ -163,7 +178,7 @@ def process_file(uploaded_file):
     
 
     # 10.1 Combinar el DataFrame de comentarios (por ejemplo, df_categoricas) con la columna específica de df
-    columnas_comentarios = pd.concat([df_categoricas, df.iloc[:, 37]], axis=1)
+    columnas_comentarios = pd.concat([df_categoricas, df.iloc[:, 44]], axis=1)
 
     # 10.2. Agrupar y concatenar los comentarios en una sola columna por grupo
     df_comentarios = columnas_comentarios.groupby(['nombre_micro', 'FORMADOR', 'Grupo']).agg(
